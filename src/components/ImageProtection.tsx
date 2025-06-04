@@ -20,7 +20,7 @@ export function ImageProtection() {
       }
     };
 
-    // Disable F12, Ctrl+Shift+I, Ctrl+U (basic dev tools protection)
+    // Disable F12, Ctrl+Shift+I, Ctrl+U (basic dev tools protection) deployment fix
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
         e.key === "F12" ||
