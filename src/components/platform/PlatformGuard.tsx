@@ -1,7 +1,7 @@
 // src/components/platform/PlatformGuard.tsx
 "use client";
 
-import { usePlatformDetection } from "@/hooks/usePlatformDetection";
+import { usePlatformDetection } from "@/hooks/usePlatFormDetection";
 import { AndroidRedirect } from "./AndroidRedirect";
 
 interface PlatformGuardProps {
@@ -24,7 +24,7 @@ export function PlatformGuard({ children }: PlatformGuardProps) {
   }
 
   // Redirect Android users to download app
-  if (platform === 'android') {
+  if (platform === "android") {
     return <AndroidRedirect />;
   }
 
