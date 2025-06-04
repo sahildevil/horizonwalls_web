@@ -61,7 +61,8 @@ const fetchWithRetry = async (fn: () => Promise<any>, maxRetries = 3) => {
 // Services
 export const wallpaperService = {
   // Clear method using pure offset-based pagination - most reliable with Appwrite
-  getWallpapers: async (pageSize = 20, pageOffset = 0, categoryId = null, searchQuery = null) => {
+  getWallpapers: async (pageSize = 20, pageOffset = 0, categoryId: string | null = null,
+  searchQuery: string | null = null) => {
     return fetchWithRetry(async () => {
       try {
         console.log('Fetching wallpapers - page offset:', pageOffset, 'page size:', pageSize);

@@ -11,7 +11,6 @@ export default async function CategoryPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ name?: string }>;
 }) {
-  // Await params and searchParams
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
@@ -23,8 +22,13 @@ export default async function CategoryPage({
   let initialWallpapers = [];
 
   try {
-    // Fix: Correct parameter order (pageSize, pageOffset, categoryId, searchQuery)
-    const response = await wallpaperService.getWallpapers(20, 0, categoryId, null);
+    // Ensure categoryId is string | null
+    const response = await wallpaperService.getWallpapers(
+      20,
+      0,
+      categoryId ? categoryId : null,
+      null
+    );
     initialWallpapers = response.documents;
   } catch (error) {
     console.error("Error loading category wallpapers:", error);
