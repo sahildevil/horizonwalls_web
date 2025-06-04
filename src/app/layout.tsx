@@ -7,7 +7,6 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import { AdSenseProvider } from "@/providers/AdSenseProvider";
 import { PlatformGuard } from "@/components/platform/PlatformGuard";
 import { ImageProtection } from "@/components/ImageProtection";
-import { ThemeScript } from "@/components/theme-script";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,7 +24,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <ThemeScript />
         {/* AdSense Verification Script */}
         <Script
           async
