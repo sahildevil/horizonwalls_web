@@ -18,41 +18,53 @@ export function AdSenseProvider({
   publisherId: string;
 }) {
   const [isAdLoaded, setIsAdLoaded] = useState(false);
-  const [adScript, setAdScript] = useState<HTMLScriptElement | null>(null);
 
   useEffect(() => {
-    // Load AdSense script
-    const script = document.createElement('script');
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
-    script.async = true;
-    script.crossOrigin = 'anonymous';
-    
-    script.onload = () => {
-      setIsAdLoaded(true);
-      console.log('AdSense script loaded');
-    };
-    
-    script.onerror = () => {
-      console.error('Failed to load AdSense script');
-    };
-    
-    document.head.appendChild(script);
-    setAdScript(script);
+    // Check if AdSense script is already loaded
+    const checkAdSense = () => {
+      if (window.adsbygoogle) {
+        setIsAdLoaded(true);
+        console.log('AdSense script already loaded');
+        return;
+      }
 
-    return () => {
-      if (script && document.head.contains(script)) {
-        document.head.removeChild(script);
+      // Load AdSense script if not already present
+      const existingScript = document.querySelector(`script[src*="adsbygoogle.js"]`);
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        
+        script.onload = () => {
+          setIsAdLoaded(true);
+          console.log('AdSense script loaded');
+        };
+        
+        script.onerror = () => {
+          console.error('Failed to load AdSense script');
+        };
+        
+        document.head.appendChild(script);
+      } else {
+        // Script already exists, just set as loaded
+        setIsAdLoaded(true);
       }
     };
+
+    checkAdSense();
   }, [publisherId]);
 
   const loadAd = () => {
-    if (window.adsbygoogle && window.adsbygoogle.loaded) {
+    if (window.adsbygoogle) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
+        console.log('Ad push called');
       } catch (error) {
         console.error('Error loading ad:', error);
       }
+    } else {
+      console.warn('AdSense not available');
     }
   };
 
@@ -65,14 +77,11 @@ export function AdSenseProvider({
       }
 
       try {
-        // For interstitial ads, we'll use a custom fullscreen overlay
-        // Since AdSense interstitials are more complex, we'll simulate with display ads
         loadAd();
-        
-        // Simulate ad completion after 5 seconds or user closes
+        // Simulate ad completion - in real scenario, this would be handled by the overlay
         setTimeout(() => {
           resolve(true);
-        }, 100); // Quick resolve for now, will be handled by overlay
+        }, 100);
         
       } catch (error) {
         console.error('Error showing interstitial ad:', error);

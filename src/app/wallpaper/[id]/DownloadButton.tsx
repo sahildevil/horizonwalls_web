@@ -16,7 +16,7 @@ export function DownloadButton({
 }) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [showAd, setShowAd] = useState(false);
-  const { isAdLoaded, showInterstitialAd } = useAdSense();
+  const { isAdLoaded } = useAdSense();
 
   const handleDownload = async () => {
     setIsDownloading(true);
@@ -61,7 +61,7 @@ export function DownloadButton({
       <Button
         onClick={handleDownload}
         disabled={isDownloading}
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
       >
         <Download size={18} />
         {isDownloading ? "Preparing Download..." : "Download"}
@@ -71,7 +71,7 @@ export function DownloadButton({
         isOpen={showAd}
         onClose={() => setShowAd(false)}
         onAdComplete={handleAdComplete}
-        adUnitId="YOUR_AD_UNIT_ID_HERE" // Replace with your actual ad unit ID
+        adUnitId="9137420112" // Your actual ad slot ID
       />
     </>
   );

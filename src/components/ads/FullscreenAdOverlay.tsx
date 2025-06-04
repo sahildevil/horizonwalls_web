@@ -20,14 +20,17 @@ export function FullscreenAdOverlay({
 }: FullscreenAdOverlayProps) {
   const [countdown, setCountdown] = useState(5); // 5 second countdown
   const [canClose, setCanClose] = useState(false);
+  const [adLoaded, setAdLoaded] = useState(false);
 
   useEffect(() => {
     if (!isOpen) {
       setCountdown(5);
       setCanClose(false);
+      setAdLoaded(false);
       return;
     }
 
+    // Start countdown
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -38,6 +41,21 @@ export function FullscreenAdOverlay({
         return prev - 1;
       });
     }, 1000);
+
+    // Load the ad
+    const loadAd = () => {
+      try {
+        if (window.adsbygoogle) {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          setAdLoaded(true);
+        }
+      } catch (error) {
+        console.error('Error loading ad:', error);
+      }
+    };
+
+    // Small delay to ensure DOM is ready
+    setTimeout(loadAd, 100);
 
     return () => clearInterval(timer);
   }, [isOpen]);
@@ -77,36 +95,51 @@ export function FullscreenAdOverlay({
 
         {/* Ad Container */}
         <div className="w-full h-full flex items-center justify-center p-8">
-          {/* AdSense Display Ad */}
-          <ins
-            className="adsbygoogle"
-            style={{
-              display: 'block',
-              width: '100%',
-              height: '100%',
-              maxWidth: '728px',
-              maxHeight: '90px'
-            }}
-            data-ad-client={`ca-pub-${adUnitId.split('-')[2]}`} // Extract from adUnitId
-            data-ad-slot={adUnitId}
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-          
-          {/* Fallback content if ad doesn't load */}
-          <div className="absolute inset-0 flex items-center justify-center text-center p-8">
-            <div className="max-w-md">
-              <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-                Support Our Free Wallpapers
+          <div className="w-full max-w-2xl">
+            {/* Your actual AdSense Display Ad */}
+            <div className="text-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                Support Horizon Walls
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                Ads help us keep providing high-quality wallpapers for free. 
-                Your download will start in {countdown} seconds.
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Ads help us provide free wallpapers. Your download will start after {countdown > 0 ? countdown : 'the ad'}.
               </p>
-              <div className="w-full h-32 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-semibold">Advertisement Space</span>
-              </div>
             </div>
+            
+            {/* AdSense Ad */}
+            <div className="flex justify-center">
+              <ins 
+                className="adsbygoogle"
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  maxWidth: '300px',
+                  height: '600px'
+                }}
+                data-ad-client="ca-pub-6865729943999095"
+                data-ad-slot="9137420112"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              />
+            </div>
+
+            {/* Fallback content if ad doesn't load */}
+            {!adLoaded && (
+              <div className="mt-8 text-center p-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <div className="max-w-md mx-auto">
+                  <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
+                    Thank You for Supporting Us!
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    Ads help us keep providing high-quality wallpapers for free. 
+                    Your download will start in {countdown} seconds.
+                  </p>
+                  <div className="w-full h-32 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-semibold">Advertisement Space</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -114,10 +147,17 @@ export function FullscreenAdOverlay({
         <div className="absolute bottom-4 left-4 right-4 text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Thanks for supporting Horizon Walls! 
-            {canClose ? ' You can now close this ad.' : ` Please wait ${countdown} more seconds.`}
+            {canClose ? ' You can now close this ad and download will start.' : ` Please wait ${countdown} more seconds.`}
           </p>
         </div>
       </div>
     </div>
   );
+}
+
+// Extend window object for TypeScript
+declare global {
+  interface Window {
+    adsbygoogle: any;
+  }
 }
