@@ -1,80 +1,82 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { useAuth } from '@/providers/AuthProvider';
-import { useTheme } from '@/providers/ThemeProvider';
-import { Menu, X, Sun, Moon, Search, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from "next/link";
+import { useState } from "react";
+import { Menu, X, Home, Grid, Heart, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export function Header() {
-  const { user, logout, isAuthenticated } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navigation = [
+    { name: "Home", href: "/", icon: Home },
+    { name: "Categories", href: "/categories", icon: Grid },
+    { name: "Favorites", href: "/favorites", icon: Heart },
+    { name: "Search", href: "/search", icon: Search },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </Button>
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold">Horizon Walls</span>
-          </Link>
-        </div>
-        
-        <nav className={`${isMenuOpen ? 'absolute top-16 left-0 right-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-800 flex flex-col gap-4' : 'hidden'} md:flex md:items-center md:gap-6`}>
-          <Link href="/" className="text-sm font-medium hover:underline">Home</Link>
-          <Link href="/categories" className="text-sm font-medium hover:underline">Categories</Link>
-          {isAuthenticated && (
-            <Link href="/favorites" className="text-sm font-medium hover:underline">Favorites</Link>
-          )}
-          <Link href="/about" className="text-sm font-medium hover:underline">About</Link>
-          <Link href="/contact" className="text-sm font-medium hover:underline">Contact</Link>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <Link href="/" className="flex items-center space-x-2">
+          <span className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+            Horizon Walls
+          </span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          {navigation.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary"
+              >
+                <Icon size={18} />
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
         </nav>
-        
-        <div className="flex items-center gap-4">
-          <Link href="/search">
-            <Button variant="ghost" size="icon" aria-label="Search">
-              <Search size={20} />
+
+        {/* Mobile Navigation */}
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild className="md:hidden">
+            <Button variant="ghost" size="icon">
+              <Menu size={20} />
             </Button>
-          </Link>
-          
-          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </Button>
-          
-          {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.name ? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}` : ''} />
-                    <AvatarFallback><User size={18} /></AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Link href="/login">
-              <Button variant="outline" size="sm">Login</Button>
-            </Link>
-          )}
-        </div>
+          </SheetTrigger>
+          <SheetContent side="right">
+            <SheetHeader>
+              <SheetTitle>Navigation</SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col space-y-4 mt-8">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-center space-x-3 text-lg font-medium transition-colors hover:text-primary"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon size={20} />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   );
