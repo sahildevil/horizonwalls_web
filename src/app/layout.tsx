@@ -1,16 +1,17 @@
 // src/app/layout.tsx
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/providers/ThemeProvider';
-import { AuthProvider } from '@/providers/AuthProvider';
-import { PlatformGuard } from '@/components/platform/PlatformGuard';
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
+import { PlatformGuard } from "@/components/platform/PlatformGuard";
+import { ImageProtection } from "@/components/ImageProtection";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Horizon Walls',
-  description: 'Discover and download high-quality wallpapers',
+  title: "Horizon Walls",
+  description: "Discover and download high-quality wallpapers",
 };
 
 export default function RootLayout({
@@ -24,6 +25,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <PlatformGuard>
+              <ImageProtection />
               {children}
             </PlatformGuard>
           </AuthProvider>

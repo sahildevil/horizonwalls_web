@@ -1,67 +1,93 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
-import { Heart } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import Image from "next/image";
+import { Heart } from "lucide-react";
+import Link from "next/link";
 
-type WallpaperCardProps = {
+interface WallpaperCardProps {
   id: string;
   title: string;
   imageUrl: string;
-  isFavorite?: boolean;
-  onFavoriteToggle?: () => void;
-  className?: string;
-};
+  isFavorite: boolean;
+  onFavoriteToggle: () => void;
+}
 
 export function WallpaperCard({
   id,
   title,
   imageUrl,
-  isFavorite = false,
+  isFavorite,
   onFavoriteToggle,
-  className,
 }: WallpaperCardProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    return false;
+  };
+
+  const handleDragStart = (e: React.DragEvent) => {
+    e.preventDefault();
+    return false;
+  };
+
+  const protectionStyles = {
+    WebkitUserSelect: "none" as const,
+    WebkitTouchCallout: "none" as const,
+    WebkitTapHighlightColor: "transparent",
+    userSelect: "none" as const,
+    MozUserSelect: "none" as const,
+    msUserSelect: "none" as const,
+  };
+
   return (
-    <div className={cn(
-      'group relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800',
-      className
-    )}>
-      <Link href={`/wallpaper/${id}`} className="block aspect-[9/16] w-full">
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-gray-500" />
-          </div>
-        )}
-        <Image
-          src={imageUrl}
-          alt={title || 'Wallpaper'}
-          fill
-          className={cn(
-            'object-cover transition-all duration-300 group-hover:scale-105',
-            isLoading ? 'opacity-0' : 'opacity-100'
-          )}
-          onLoad={() => setIsLoading(false)}
-        />
-      </Link>
-      
-      {onFavoriteToggle && (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            onFavoriteToggle();
-          }}
-          className="absolute top-2 right-2 rounded-full bg-black/50 p-2 text-white transition-transform hover:scale-110"
+    <div className="group relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+      <Link href={`/wallpaper/${id}`}>
+        <div
+          className="aspect-[9/16] relative"
+          style={protectionStyles}
+          onContextMenu={handleContextMenu}
+          onDragStart={handleDragStart}
         >
-          <Heart size={20} fill={isFavorite ? '#ff4757' : 'none'} />
-        </button>
-      )}
-      
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-        <h3 className="text-sm font-medium text-white line-clamp-1">{title || 'Untitled Wallpaper'}</h3>
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105 select-none pointer-events-none"
+            draggable={false}
+            onContextMenu={handleContextMenu}
+            onDragStart={handleDragStart}
+            style={protectionStyles}
+          />
+
+          {/* Protection overlay */}
+          <div
+            className="absolute inset-0 z-10 bg-transparent"
+            onContextMenu={handleContextMenu}
+            onDragStart={handleDragStart}
+            style={protectionStyles}
+          />
+        </div>
+      </Link>
+
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onFavoriteToggle();
+        }}
+        className={`absolute top-2 right-2 z-20 rounded-full p-2 transition-colors ${
+          isFavorite
+            ? "bg-red-500 text-white"
+            : "bg-white/80 text-gray-700 hover:bg-white"
+        }`}
+      >
+        <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
+      </button>
+
+      <div className="p-3">
+        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+          {title}
+        </h3>
       </div>
     </div>
   );

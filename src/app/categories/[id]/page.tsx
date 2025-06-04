@@ -8,18 +8,22 @@ export default async function CategoryPage({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams: { name?: string };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ name?: string }>;
 }) {
-  const categoryId = params.id;
-  const categoryName = searchParams.name
-    ? decodeURIComponent(searchParams.name)
+  // Await params and searchParams
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+
+  const categoryId = resolvedParams.id;
+  const categoryName = resolvedSearchParams.name
+    ? decodeURIComponent(resolvedSearchParams.name)
     : "Category";
 
   let initialWallpapers = [];
 
   try {
-    const response = await wallpaperService.getWallpapers(20, null, categoryId);
+    const response = await wallpaperService.getWallpapers(20, 0, categoryId);
     initialWallpapers = response.documents;
   } catch (error) {
     console.error("Error loading category wallpapers:", error);
