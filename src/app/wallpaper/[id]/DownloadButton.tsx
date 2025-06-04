@@ -1,8 +1,11 @@
+// src/app/wallpaper/[id]/DownloadButton.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useState } from "react";
+import { FullscreenAdOverlay } from "@/components/ads/FullscreenAdOverlay";
+import { useAdSense } from "@/providers/AdSenseProvider";
 
 export function DownloadButton({
   imageUrl,
@@ -12,11 +15,25 @@ export function DownloadButton({
   fileName: string;
 }) {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [showAd, setShowAd] = useState(false);
+  const { isAdLoaded, showInterstitialAd } = useAdSense();
 
   const handleDownload = async () => {
     setIsDownloading(true);
+    
     try {
-      // For client-side downloads, we can use this approach
+      // Show ad first
+      setShowAd(true);
+      
+    } catch (error) {
+      console.error("Error starting download process:", error);
+      setIsDownloading(false);
+    }
+  };
+
+  const handleAdComplete = async () => {
+    try {
+      // Actually download the file after ad is completed
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
@@ -28,21 +45,34 @@ export function DownloadButton({
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+      
+      console.log("Download completed successfully");
     } catch (error) {
       console.error("Download error:", error);
+      alert("Download failed. Please try again.");
     } finally {
       setIsDownloading(false);
+      setShowAd(false);
     }
   };
 
   return (
-    <Button
-      onClick={handleDownload}
-      disabled={isDownloading}
-      className="flex items-center gap-2"
-    >
-      <Download size={18} />
-      {isDownloading ? "Downloading..." : "Download"}
-    </Button>
+    <>
+      <Button
+        onClick={handleDownload}
+        disabled={isDownloading}
+        className="flex items-center gap-2"
+      >
+        <Download size={18} />
+        {isDownloading ? "Preparing Download..." : "Download"}
+      </Button>
+
+      <FullscreenAdOverlay
+        isOpen={showAd}
+        onClose={() => setShowAd(false)}
+        onAdComplete={handleAdComplete}
+        adUnitId="YOUR_AD_UNIT_ID_HERE" // Replace with your actual ad unit ID
+      />
+    </>
   );
 }

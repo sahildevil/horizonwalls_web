@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,37 +47,42 @@ export function Header() {
               </Link>
             );
           })}
+          {/* Theme Toggle for Desktop */}
+          <ThemeToggle />
         </nav>
 
         {/* Mobile Navigation */}
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon">
-              <Menu size={20} />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right">
-            <SheetHeader>
-              <SheetTitle>Navigation</SheetTitle>
-            </SheetHeader>
-            <nav className="flex flex-col space-y-4 mt-8">
-              {navigation.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="flex items-center space-x-3 text-lg font-medium transition-colors hover:text-primary"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Icon size={20} />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-          </SheetContent>
-        </Sheet>
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu size={20} />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Navigation</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col space-y-4 mt-8">
+                {navigation.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center space-x-3 text-lg font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Icon size={20} />
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
