@@ -11,7 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,12 +47,10 @@ export function Header() {
             );
           })}
           {/* Theme Toggle for Desktop */}
-          <ThemeToggle />
         </nav>
 
         {/* Mobile Navigation */}
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
