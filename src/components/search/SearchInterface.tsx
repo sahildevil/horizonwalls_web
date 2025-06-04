@@ -23,11 +23,12 @@ export function SearchInterface() {
       setError(null);
 
       try {
+        // Fix: Correct parameter order (pageSize, pageOffset, categoryId, searchQuery)
         const response = await wallpaperService.getWallpapers(
-          20,
-          null,
-          null,
-          query
+          20,    // pageSize
+          0,     // pageOffset
+          null,  // categoryId
+          query  // searchQuery
         );
         setSearchResults(response.documents);
       } catch (err: any) {

@@ -23,7 +23,8 @@ export default async function CategoryPage({
   let initialWallpapers = [];
 
   try {
-    const response = await wallpaperService.getWallpapers(20, 0, categoryId);
+    // Fix: Correct parameter order (pageSize, pageOffset, categoryId, searchQuery)
+    const response = await wallpaperService.getWallpapers(20, 0, categoryId, null);
     initialWallpapers = response.documents;
   } catch (error) {
     console.error("Error loading category wallpapers:", error);
