@@ -1,3 +1,4 @@
+// filepath: d:\HWappwrite\horizonwalls-web\src\components\layout\Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -11,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,11 +48,16 @@ export function Header() {
               </Link>
             );
           })}
+          
           {/* Theme Toggle for Desktop */}
+          <ThemeToggle />
         </nav>
 
         {/* Mobile Navigation */}
         <div className="flex items-center gap-2 md:hidden">
+          {/* Theme Toggle for Mobile */}
+          <ThemeToggle />
+          
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
