@@ -1,3 +1,4 @@
+// src/providers/AdSenseProvider.tsx
 "use client";
 
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -20,51 +21,51 @@ export function AdSenseProvider({
   const [isAdLoaded, setIsAdLoaded] = useState(false);
 
   useEffect(() => {
-    // Check if AdSense script is already loaded
-    const checkAdSense = () => {
-      if (window.adsbygoogle) {
+    const loadAdSenseScript = () => {
+      // Check if script already exists
+      const existingScript = document.querySelector(`script[src*="adsbygoogle.js"]`);
+      if (existingScript) {
         setIsAdLoaded(true);
-        console.log('AdSense script already loaded');
         return;
       }
 
-      // Load AdSense script if not already present
-      const existingScript = document.querySelector(`script[src*="adsbygoogle.js"]`);
-      if (!existingScript) {
-        const script = document.createElement('script');
-        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
-        script.async = true;
-        script.crossOrigin = 'anonymous';
-        
-        script.onload = () => {
-          setIsAdLoaded(true);
-          console.log('AdSense script loaded');
-        };
-        
-        script.onerror = () => {
-          console.error('Failed to load AdSense script');
-        };
-        
-        document.head.appendChild(script);
-      } else {
-        // Script already exists, just set as loaded
+      // Create and load AdSense script
+      const script = document.createElement('script');
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      
+      script.onload = () => {
         setIsAdLoaded(true);
-      }
+        console.log('AdSense script loaded successfully');
+        // Initialize adsbygoogle array
+        (window.adsbygoogle = window.adsbygoogle || []);
+      };
+      
+      script.onerror = () => {
+        console.error('Failed to load AdSense script');
+        setIsAdLoaded(false);
+      };
+      
+      // Append to head instead of body
+      document.head.appendChild(script);
     };
 
-    checkAdSense();
+    // Load script after component mounts
+    loadAdSenseScript();
   }, [publisherId]);
 
   const loadAd = () => {
-    if (window.adsbygoogle) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        console.log('Ad push called');
-      } catch (error) {
-        console.error('Error loading ad:', error);
-      }
-    } else {
-      console.warn('AdSense not available');
+    if (!isAdLoaded || !window.adsbygoogle) {
+      console.warn('AdSense not ready yet');
+      return;
+    }
+
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      console.log('Ad push called successfully');
+    } catch (error) {
+      console.error('Error loading ad:', error);
     }
   };
 
@@ -72,20 +73,18 @@ export function AdSenseProvider({
     return new Promise((resolve) => {
       if (!isAdLoaded || !window.adsbygoogle) {
         console.log('AdSense not loaded, skipping ad');
-        resolve(true); // Allow download without ad
+        resolve(true);
         return;
       }
 
       try {
         loadAd();
-        // Simulate ad completion - in real scenario, this would be handled by the overlay
         setTimeout(() => {
           resolve(true);
         }, 100);
-        
       } catch (error) {
         console.error('Error showing interstitial ad:', error);
-        resolve(true); // Allow download on error
+        resolve(true);
       }
     });
   };

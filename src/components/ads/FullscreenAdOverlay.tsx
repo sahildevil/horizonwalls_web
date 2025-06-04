@@ -1,9 +1,10 @@
 // src/components/ads/FullscreenAdOverlay.tsx
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAdSense } from '@/providers/AdSenseProvider';
 
 interface FullscreenAdOverlayProps {
   isOpen: boolean;
@@ -18,9 +19,11 @@ export function FullscreenAdOverlay({
   onAdComplete, 
   adUnitId 
 }: FullscreenAdOverlayProps) {
-  const [countdown, setCountdown] = useState(5); // 5 second countdown
+  const [countdown, setCountdown] = useState(5);
   const [canClose, setCanClose] = useState(false);
   const [adLoaded, setAdLoaded] = useState(false);
+  const { isAdLoaded: adSenseReady } = useAdSense();
+  const adRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -42,23 +45,30 @@ export function FullscreenAdOverlay({
       });
     }, 1000);
 
-    // Load the ad
-    const loadAd = () => {
-      try {
-        if (window.adsbygoogle) {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-          setAdLoaded(true);
+    // Load ad when AdSense is ready
+    if (adSenseReady && window.adsbygoogle) {
+      const loadAd = () => {
+        try {
+          // Clear any existing ad content
+          if (adRef.current) {
+            const existingAd = adRef.current.querySelector('.adsbygoogle');
+            if (existingAd && !existingAd.getAttribute('data-adsbygoogle-status')) {
+              (window.adsbygoogle = window.adsbygoogle || []).push({});
+              setAdLoaded(true);
+              console.log('Ad loaded in overlay');
+            }
+          }
+        } catch (error) {
+          console.error('Error loading ad in overlay:', error);
         }
-      } catch (error) {
-        console.error('Error loading ad:', error);
-      }
-    };
+      };
 
-    // Small delay to ensure DOM is ready
-    setTimeout(loadAd, 100);
+      // Small delay to ensure DOM is ready
+      setTimeout(loadAd, 100);
+    }
 
     return () => clearInterval(timer);
-  }, [isOpen]);
+  }, [isOpen, adSenseReady]);
 
   const handleClose = () => {
     if (canClose) {
@@ -94,9 +104,8 @@ export function FullscreenAdOverlay({
         </div>
 
         {/* Ad Container */}
-        <div className="w-full h-full flex items-center justify-center p-8">
+        <div className="w-full h-full flex items-center justify-center p-8" ref={adRef}>
           <div className="w-full max-w-2xl">
-            {/* Your actual AdSense Display Ad */}
             <div className="text-center mb-4">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
                 Support Horizon Walls
@@ -106,33 +115,36 @@ export function FullscreenAdOverlay({
               </p>
             </div>
             
-            {/* AdSense Ad */}
-            <div className="flex justify-center">
-              <ins 
-                className="adsbygoogle"
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  maxWidth: '300px',
-                  height: '600px'
-                }}
-                data-ad-client="ca-pub-6865729943999095"
-                data-ad-slot="9137420112"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-              />
-            </div>
+            {/* AdSense Ad - Only render when AdSense is ready */}
+            {adSenseReady && (
+              <div className="flex justify-center">
+                <ins 
+                  className="adsbygoogle"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    maxWidth: '300px',
+                    height: '600px'
+                  }}
+                  data-ad-client="ca-pub-6865729943999095"
+                  data-ad-slot="9137420112"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"
+                />
+              </div>
+            )}
 
-            {/* Fallback content if ad doesn't load */}
-            {!adLoaded && (
+            {/* Fallback content */}
+            {(!adSenseReady || !adLoaded) && (
               <div className="mt-8 text-center p-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
                 <div className="max-w-md mx-auto">
                   <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
                     Thank You for Supporting Us!
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Ads help us keep providing high-quality wallpapers for free. 
-                    Your download will start in {countdown} seconds.
+                    {!adSenseReady ? 'Loading ad...' : 
+                     `Ads help us keep providing high-quality wallpapers for free. 
+                      Your download will start in ${countdown} seconds.`}
                   </p>
                   <div className="w-full h-32 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
                     <span className="text-white font-semibold">Advertisement Space</span>
@@ -153,11 +165,4 @@ export function FullscreenAdOverlay({
       </div>
     </div>
   );
-}
-
-// Extend window object for TypeScript
-declare global {
-  interface Window {
-    adsbygoogle: any;
-  }
 }

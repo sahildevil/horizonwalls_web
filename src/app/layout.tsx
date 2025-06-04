@@ -8,7 +8,6 @@ import { AdSenseProvider } from "@/providers/AdSenseProvider";
 import { PlatformGuard } from "@/components/platform/PlatformGuard";
 import { ImageProtection } from "@/components/ImageProtection";
 import { ThemeScript } from "@/components/ThemeScript";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,13 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ThemeScript />
-        {/* AdSense Verification Script */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6865729943999095"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {/* AdSense script will be loaded by AdSenseProvider */}
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <AdSenseProvider publisherId="ca-pub-6865729943999095">
