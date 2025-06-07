@@ -27,7 +27,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold bg-black bg-clip-text text-transparent font-tan-mon">
+          <span className="text-2xl font-bold header-title font-tan-mon transition-colors duration-300">
             Horizon Walls
           </span>
         </Link>
@@ -47,7 +47,7 @@ export function Header() {
               </Link>
             );
           })}
-          
+
           {/* Theme Toggle for Desktop */}
           <ThemeToggle />
         </nav>
@@ -56,7 +56,7 @@ export function Header() {
         <div className="flex items-center gap-2 md:hidden">
           {/* Theme Toggle for Mobile */}
           <ThemeToggle />
-          
+
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">

@@ -29,25 +29,25 @@
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
+  --background: 0 0% 0%; /* Pitch black background */
+  --foreground: 0 0% 100%; /* Pure white text */
+  --card: 0 0% 3%; /* Very dark gray for cards */
+  --card-foreground: 0 0% 100%; /* White text on cards */
+  --popover: 0 0% 0%; /* Pitch black popover */
+  --popover-foreground: 0 0% 100%; /* White text on popover */
+  --primary: 0 0% 100%; /* White primary */
+  --primary-foreground: 0 0% 0%; /* Black text on primary */
+  --secondary: 0 0% 8%; /* Very dark secondary */
+  --secondary-foreground: 0 0% 100%; /* White text on secondary */
+  --muted: 0 0% 8%; /* Very dark muted */
+  --muted-foreground: 0 0% 65%; /* Light gray muted text */
+  --accent: 0 0% 8%; /* Very dark accent */
+  --accent-foreground: 0 0% 100%; /* White text on accent */
+  --destructive: 0 84.2% 30.6%; /* Keep red destructive */
+  --destructive-foreground: 0 0% 100%; /* White text on destructive */
+  --border: 0 0% 15%; /* Dark gray borders */
+  --input: 0 0% 8%; /* Very dark inputs */
+  --ring: 0 0% 83.9%; /* Light gray focus ring */
 }
 
 * {
@@ -67,7 +67,8 @@ body {
 
 /* Apply theme transitions only to elements that need them */
 .theme-transition {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* Image Protection Styles */
@@ -146,16 +147,15 @@ img {
 
 /* Enhanced phone hover effects - more specific selectors */
 .phone-frame {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              filter 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
   transform-origin: center center;
   will-change: transform;
 }
 
 .phone-frame:hover {
   transform: scale(1.05) translateZ(0);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
   filter: brightness(1.1);
   z-index: 10;
   position: relative;
@@ -182,8 +182,8 @@ button:hover {
 
 /* Card hover effects */
 .card-hover {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-hover:hover {
@@ -192,14 +192,13 @@ button:hover {
 }
 
 .dark .card-hover:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
 }
 
 /* Wallpaper grid item hover effects */
 .wallpaper-item {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              filter 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
 }
 
 .wallpaper-item:hover {
@@ -209,7 +208,7 @@ button:hover {
 }
 
 .dark .wallpaper-item:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
 }
 
 /* Link hover effects */
@@ -231,7 +230,7 @@ button:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Carousel fade effects */
+/* Carousel fade effects - updated for pitch black */
 .carousel-fade-left,
 .carousel-fade-right {
   position: absolute;
@@ -253,19 +252,30 @@ button:hover {
 }
 
 .dark .carousel-fade-left {
-  background: linear-gradient(to right, rgba(3, 7, 18, 1), transparent);
+  background: linear-gradient(to right, rgba(0, 0, 0, 1), transparent);
 }
 
 .dark .carousel-fade-right {
-  background: linear-gradient(to left, rgba(3, 7, 18, 1), transparent);
+  background: linear-gradient(to left, rgba(0, 0, 0, 1), transparent);
 }
+
 .font-tan-mon {
   font-family: var(--font-tan-mon), Arial, sans-serif !important;
 }
+
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
-    font-family: var(--font-tan-mon), Arial , sans-serif;
+  font-family: var(--font-tan-mon), Arial, sans-serif;
+}
+
+/* Header title theme colors */
+.header-title {
+  color: rgb(17, 24, 39) !important; /* gray-900 for light mode */
+}
+
+.dark .header-title {
+  color: rgb(255, 255, 255) !important; /* pure white for dark mode */
 }
 
 /* Focus styles for accessibility */
