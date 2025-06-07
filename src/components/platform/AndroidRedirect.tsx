@@ -108,11 +108,11 @@ export function AndroidRedirect() {
           <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
             <div className="flex items-center">
               <Star className="w-4 h-4 text-yellow-400 mr-1" />
-              <span>4.8/5 Rating</span>
+              <span>Please Rate us 5/5</span>
             </div>
             <div className="flex items-center">
               <Smartphone className="w-4 h-4 text-blue-400 mr-1" />
-              <span>1M+ Downloads</span>
+              <span>10K+ Downloads</span>
             </div>
           </div>
         </div>

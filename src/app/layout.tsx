@@ -8,6 +8,7 @@ import { AdSenseProvider } from "@/providers/AdSenseProvider";
 import { PlatformGuard } from "@/components/platform/PlatformGuard";
 import { ImageProtection } from "@/components/ImageProtection";
 import { ThemeScript } from "@/components/ThemeScript";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
               <PlatformGuard>
                 <ImageProtection />
                 {children}
+                <Analytics />
               </PlatformGuard>
             </AuthProvider>
           </ThemeProvider>
