@@ -24,7 +24,7 @@ export function PlatformGuard({ children }: PlatformGuardProps) {
   }
 
   // Redirect Android users to download app
-  if (platform === "android") {
+  if (platform === "androidd") {
     return <AndroidRedirect />;
   }
 

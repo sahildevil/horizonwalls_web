@@ -1,4 +1,3 @@
-// filepath: d:\HWappwrite\horizonwalls-web\src\components\layout\Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -28,7 +27,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold bg-black bg-clip-text text-transparent font-tan-mon">
             Horizon Walls
           </span>
         </Link>

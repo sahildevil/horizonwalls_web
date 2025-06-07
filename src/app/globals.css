@@ -259,10 +259,13 @@ button:hover {
 .dark .carousel-fade-right {
   background: linear-gradient(to left, rgba(3, 7, 18, 1), transparent);
 }
-
+.font-tan-mon {
+  font-family: var(--font-tan-mon), Arial, sans-serif !important;
+}
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
+    font-family: var(--font-tan-mon), Arial , sans-serif;
 }
 
 /* Focus styles for accessibility */

@@ -1,7 +1,7 @@
-// src/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { AdSenseProvider } from "@/providers/AdSenseProvider";
@@ -10,6 +10,14 @@ import { ImageProtection } from "@/components/ImageProtection";
 import { ThemeScript } from "@/components/ThemeScript";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// Load the custom TAN-MON font
+const tanMon = localFont({
+  src: "../../public/fonts/TAN-MON.otf",
+  variable: "--font-tan-mon",
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
+});
 
 export const metadata: Metadata = {
   title: "Horizon Walls",
@@ -22,10 +30,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${tanMon.variable}`}
+    >
       <head>
         <ThemeScript />
-        {/* AdSense script will be loaded by AdSenseProvider */}
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <AdSenseProvider publisherId="ca-pub-6865729943999095">
