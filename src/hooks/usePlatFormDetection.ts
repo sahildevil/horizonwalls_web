@@ -17,7 +17,7 @@ export function usePlatformDetection() {
       
       // Check for Android
       if (userAgent.includes('android')) {
-        return 'android';
+        return 'ios';
       }
       
       // Check for iOS (iPhone, iPad, iPod)

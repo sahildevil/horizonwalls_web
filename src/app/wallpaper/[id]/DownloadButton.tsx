@@ -23,7 +23,7 @@ export function DownloadButton({
     
     try {
       // Show ad first
-      setShowAd(true);
+      //setShowAd(true);
       
     } catch (error) {
       console.error("Error starting download process:", error);
