@@ -27,7 +27,7 @@ export function usePlatformDetection() {
       
       // Everything else is considered desktop/web
       //return 'android'; //desktop for later use
-      return 'android';
+      return 'ios';
     };
 
     setPlatform(detectPlatform());
