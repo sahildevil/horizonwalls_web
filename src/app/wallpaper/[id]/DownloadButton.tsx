@@ -22,7 +22,7 @@ export function DownloadButton({
     try {
       console.log("Starting direct download...");
 
-      // Fetch the image
+      // Fetch the ima
       const response = await fetch(imageUrl);
       if (!response.ok) {
         throw new Error("Failed to fetch image");
